@@ -121,6 +121,9 @@
     this.getFavoriteCompany = function() {
       var self = this
       var hashArray = location.hash.split(this.delimiter)
+      // window.location.search returns the query string of the current URL
+      // split at '|' 
+      // slice at the second character
       var searchArray = window.location.search.split(this.delimiter).slice(1)
 
       var beforePosition = true
