@@ -17,6 +17,11 @@
     UserIQ: 'images/useriq.png'
   }
 
+  // 'UserIQ' ASCII Char Set --> 85, 115, 101, 114, 73, 81 
+  // Base64 Encoded = 'VXNlcklR'
+
+  // 'Facebook' Base64 Encoded = 'RmFjZWJvb2s='
+
   // RFC 4648
   // Library to encode text
   var EncodingLibrary = {
@@ -30,7 +35,10 @@
       var enc1, enc2, enc3, enc4;
       var i = 0;
 
+      // negated set - all uppercase + lowercase letters 
+      // including escaped chars: +, \, =
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+      
 
       while (i < input.length) {
         enc1 = this._keyStr.indexOf(input.charAt(i++));
@@ -38,7 +46,10 @@
         enc3 = this._keyStr.indexOf(input.charAt(i++));
         enc4 = this._keyStr.indexOf(input.charAt(i++));
 
+        //bitwise operations ??
+        //
         chr1 = (enc1 << 2) | (enc2 >> 4);
+
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
         chr3 = ((enc3 & 3) << 6) | enc4;
 
@@ -86,7 +97,10 @@
 
   CompanySelector = function() {
     this.delimiter = '|'
-    this.defaultlogo = 'RmFjZWJvb2s='
+    // this.defaultlogo = 'RmFjZWJvb2s=' // Base64 Decoded = 'Facebook'
+    this.defaultlogo = 'VXNlcklR';  // Base64 Decoded = 'UserIQ'
+    this.name = 'Michael McGraw'
+    
     this.position = null
 
     this.decodeString = function(encodedText) {
