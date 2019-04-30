@@ -37,11 +37,11 @@
       var enc1, enc2, enc3, enc4;
       var i = 0;
 
-      // negated set - all uppercase + lowercase letters 
+      // negated set - all uppercase + lowercase letters + digits 0 thru 9 
       // including escaped chars: +, \, =
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
       
-
+      // 
       while (i < input.length) {
         enc1 = this._keyStr.indexOf(input.charAt(i++));
         enc2 = this._keyStr.indexOf(input.charAt(i++));
@@ -55,7 +55,7 @@
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
         chr3 = ((enc3 & 3) << 6) | enc4;
 
-        output = output + String.fromCharCode(chr1);
+        output = output + String.fromCharCode(chr1);  
 
         if (enc3 != 64) {
           output = output + String.fromCharCode(chr2);
@@ -70,6 +70,7 @@
     },
 
     // private method for UTF-8 decoding
+    //  \x4D\x69\x63\x68\x61\x65\x6C\x20\x4D\x63\x47\x72\x61\x77 --> UTF-8 decoded Michael McGraw ??
     _utf8_decode : function (utftext) {
       var string = "";
       var i = 0;
@@ -95,11 +96,26 @@
       return string;
     }
   }
+  
+  // ----------------------------------------------------
+
+
+  // *** INSTRUCTIONS: only change the query string / hash of the URI ***
+  // using the base64 encoded string for UserIQ with the set delimiter:
+  // https://useriq-com.github.io/#company-name=UserIQ - this should set the element with id-"company-name"
+  // #person-name=michael%20mcgraw - this 'should' set the element with id="person-name" 
+  // #logo=UserIq - this.'should' set the element with id=logo
+
+
+  // ------------------------------------------------------
+
+
 
   CompanySelector = function() {
     this.delimiter = '|'
     // this.defaultlogo = 'RmFjZWJvb2s=' // Base64 Decoded = 'Facebook'
-    this.defaultlogo = 'VXNlcklR';  // Base64 Decoded = 'UserIQ'
+    this.defaultlogo = 'VXNlcklR';  // Base64 Decoded = 'UserIQ' 
+    // 
     this.name = 'TWljaGFlbCBNY0dyYXc=';  //Base64 Decoded = 'Michael McGraw'
     
     this.position = null
@@ -121,11 +137,14 @@
 
     this.getFavoriteCompany = function() {
       var self = this
+      //n JavaScript, the fragment identifier of the current HTML page can be accessed in the "hash" property location.hash
       var hashArray = location.hash.split(this.delimiter)
       // window.location.search returns the query string of the current URL
       // split at '|' 
-      // slice at the second character
-      var searchArray = window.location.search.split(this.delimiter).slice(1)
+      // slice at the second character - returns everything past the 2nd character in the string
+      // *** #logo=UserIQ|#person-name=michael%20mcgraw  ***
+      var searchArray = window.location.search.split(this.delimiter).slice(1) 
+      // split at '|' and set equal to everything past the 2nd character aka the '#'
 
       var beforePosition = true
       var hashMap = {}
@@ -149,7 +168,7 @@
         _i++
       }
 
-      this.name = this.getPersonName(searchArray)
+      this.name = this.getPersonName(searchArray) // searchArray --> string value of  
       this.name = this.calculateNameKey(this.name, searchArray)
 
       this.logo = (function() {
